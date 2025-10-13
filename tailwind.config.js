@@ -18,6 +18,9 @@ const config = {
         "neutral-light": "#F3F4F6", // Light bg
         error: "#EF4444", // Red
       },
+      animation: {
+        "spin-slow": "spin 8s linear infinite",
+      },
     },
   },
   plugins: [tailwindcssAnimate],
