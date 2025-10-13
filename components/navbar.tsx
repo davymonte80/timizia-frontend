@@ -6,11 +6,9 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { useTheme } from "next-themes";
 
 export function Navbar() {
   const pathname = usePathname();
-  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [

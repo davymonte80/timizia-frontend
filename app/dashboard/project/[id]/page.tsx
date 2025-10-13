@@ -1,24 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export default function ProjectBlueprintPage() {
   const router = useRouter();
   const params = useParams();
-  const [selectedModule, setSelectedModule] = useState("");
 
   const projectData = {
     title: "Digital Marketing",
     subtitle: "Problem Statement",
     description:
-      "A local cafe wants to grow its online community and increase foot traffic through social media\n\nAs a Digital Marketer, your job is to create a 1-month social media content plan that's clear, consistent, and engaging.",
+      "A local cafe wants to grow its online community and increase foot traffic through social media\n\nAs a Digital Marketer, your job is to create a 1-month social media content plan that&apos;s clear, consistent, and engaging.",
     sections: [
       {
-        title: "What you'll learn",
+        title: "What you&apos;ll learn",
         items: [
           "How to define marketing goals and content pillars",
           "How to research and understand a target audience",
@@ -74,7 +71,7 @@ export default function ProjectBlueprintPage() {
           </p>
         </div>
 
-        {/* What you'll learn */}
+        {/* What you&apos;ll learn */}
         {projectData.sections.map((section, idx) => (
           <div key={idx} className="mb-8">
             <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">
@@ -103,15 +100,14 @@ export default function ProjectBlueprintPage() {
           </h3>
           <div className="space-y-3">
             {projectData.milestones.map((milestone, idx) => (
-              <button
+              <div
                 key={idx}
-                onClick={() => setSelectedModule(milestone)}
-                className="w-full p-4 text-left transition-colors border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="w-full p-4 text-left border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-800"
               >
                 <span className="text-sm font-medium text-gray-900 sm:text-base dark:text-white">
                   {milestone}
                 </span>
-              </button>
+              </div>
             ))}
           </div>
         </div>

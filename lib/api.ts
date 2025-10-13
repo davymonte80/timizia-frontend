@@ -5,6 +5,7 @@ export async function signupUser(data: {
   password: string;
 }) {
   // Mock: Simulate API call
+  console.log("Signup data:", data);
   return new Promise((resolve) =>
     setTimeout(() => resolve({ success: true }), 1000)
   );
@@ -30,6 +31,7 @@ export async function generateLearningPath(data: {
   link: string;
 }) {
   // Mock analyzing
+  console.log("Generating learning path for:", data);
   return new Promise((resolve) =>
     setTimeout(() => resolve({ path: "Generated path" }), 2000)
   );

@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { CheckCircle2, XCircle, Eye, EyeOff } from "lucide-react";
 
 // --- Zod Schema with rules ---
@@ -34,6 +35,7 @@ export default function NewPasswordPage() {
   const [passwordValue, setPasswordValue] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const router = useRouter();
 
   const form = useForm<PasswordForm>({
     resolver: zodResolver(passwordSchema),
@@ -42,7 +44,7 @@ export default function NewPasswordPage() {
 
   const onSubmit = (data: PasswordForm) => {
     console.log("New password:", data.password);
-    window.location.href = "/auth/reset/success";
+    router.push("/auth/reset/success");
   };
 
   // --- Password rules ---

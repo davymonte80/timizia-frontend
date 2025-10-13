@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,7 @@ import {
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export default function VerifyPage() {
+function VerifyPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
@@ -31,7 +31,7 @@ export default function VerifyPage() {
       // TODO: verify code logic
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
       router.push("/onboarding/career-interest");
-    } catch (err) {
+    } catch {
       setError("Invalid verification code. Please try again.");
     } finally {
       setVerifying(false);
@@ -44,7 +44,7 @@ export default function VerifyPage() {
     try {
       // TODO: resend code logic
       await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (err) {
+    } catch {
       setError("Failed to resend code. Please try again.");
     } finally {
       setResending(false);
@@ -92,7 +92,7 @@ export default function VerifyPage() {
 
         {/* Instructions */}
         <p className="mb-8 text-sm leading-relaxed text-gray-600 sm:text-base dark:text-gray-400">
-          We've sent a verification code to{" "}
+          We&apos;ve sent a verification code to{" "}
           <span className="font-medium text-gray-900 dark:text-gray-100">
             {maskEmail(email)}
           </span>
@@ -130,7 +130,7 @@ export default function VerifyPage() {
 
           {/* Resend link */}
           <div className="flex items-center justify-center text-sm text-gray-600 sm:text-base dark:text-gray-400">
-            <span>Didn't receive a code?</span>
+            <span>Didn&apos;t receive a code?</span>
             <button
               type="button"
               onClick={handleResend}
@@ -159,5 +159,17 @@ export default function VerifyPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    }>
+      <VerifyPageContent />
+    </Suspense>
   );
 }

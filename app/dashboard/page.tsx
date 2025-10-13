@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bell, Search, Home, BookOpen, Briefcase, User } from "lucide-react";
-import Link from "next/link";
 
 export default function DashboardPage() {
   const router = useRouter();
