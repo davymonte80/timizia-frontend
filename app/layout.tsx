@@ -19,12 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const isLoggedIn = false; // Replace with actual auth logic
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
+      <body className={`antialiased`}>
         <Providers>
           <div className="flex flex-col min-h-screen">
-            <Navbar />
+            {isLoggedIn && <Navbar />}
             <main className="flex-1">{children}</main>
             {!pathname.startsWith("/auth") &&
               !pathname.startsWith("/onboarding") && <Footer />}
