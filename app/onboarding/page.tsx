@@ -71,7 +71,7 @@ export default function OnboardingPage() {
   const isLastSlide = selectedIndex === slides.length - 1;
 
   return (
-    <div className="relative h-screen overflow-hidden bg-white">
+    <div className="relative h-screen overflow-hidden text-gray-900 bg-white dark:bg-black dark:text-gray-100">
       {/* Embla carousel container */}
       <div className="w-full h-full" ref={emblaRef}>
         <div className="flex h-full">

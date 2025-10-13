@@ -16,7 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           {children}
           {/* Global toggle (floated) */}
-          <div className="fixed bottom-4 right-4">
+          <div className="fixed top-4 right-4">
             <ModeToggle />
           </div>
         </AuthProvider>

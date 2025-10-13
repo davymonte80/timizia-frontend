@@ -16,7 +16,7 @@ export default function RootPage() {
       } else {
         router.push("/onboarding");
       }
-    }, 4000); // Show splash for 4 seconds
+    }, 2000); // Show splash for 2 seconds
     return () => clearTimeout(timer);
   }, [isLoggedIn, router]);
 
