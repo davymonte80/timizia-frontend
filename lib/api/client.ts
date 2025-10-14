@@ -259,23 +259,24 @@ class APIClient {
             email: string;
             name: string;
             username: string;
-          }>(`/users/${possibleId}/`, { method: "GET" }, true);
+          }>(`/users/${possibleId}/`, { method: "GET" }, Boolean(token));
         } catch {
           // If that fails, we'll fall back below
         }
       }
     }
 
-    // Fallback: call /users/me/ if backend exposes it. Return null on 404.
+    // Fallback: call /users/me/ if backend exposes it. Return null on 4xx (unauthenticated/not found) to avoid redirect loops.
     try {
       return await this.request<{
         id: string;
         email: string;
         name: string;
         username: string;
-      }>("/users/me/", { method: "GET" }, true);
+      }>("/users/me/", { method: "GET" }, Boolean(token));
     } catch (err: unknown) {
-      if (err instanceof Error && /^404\b/.test(err.message)) {
+      if (err instanceof Error && /^4\d{2}\b/.test(err.message)) {
+        // Treat client errors (401/404) as unauthenticated / not found — return null and avoid navigating.
         return null;
       }
       throw err;
