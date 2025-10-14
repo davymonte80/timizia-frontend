@@ -219,67 +219,53 @@ class APIClient {
 
   // User methods
   async getCurrentUser() {
-    // First, attempt to decode user id from access token and call /users/{id}/ if possible
+    // Only attempt to decode user id from access token and call /users/{id}/ if possible.
+
     const token = this.getAccessToken();
-    if (token) {
-      const payload = this.decodeJwtPayload(token) as Record<
-        string,
-        unknown
-      > | null;
+    if (!token) return null;
 
-      const safeGetString = (
-        obj: Record<string, unknown> | null,
-        key: string
-      ): string | null => {
-        if (!obj) return null;
-        const v = obj[key];
-        return typeof v === "string" ? v : null;
-      };
+    const payload = this.decodeJwtPayload(token) as Record<
+      string,
+      unknown
+    > | null;
 
-      const possibleIdFromUser = ((): string | null => {
-        const user = payload ? payload["user"] : null;
-        if (user && typeof user === "object") {
-          const id = (user as Record<string, unknown>)["id"];
-          return typeof id === "string" ? id : null;
-        }
-        return null;
-      })();
+    const safeGetString = (
+      obj: Record<string, unknown> | null,
+      key: string
+    ): string | null => {
+      if (!obj) return null;
+      const v = obj[key];
+      return typeof v === "string" ? v : null;
+    };
 
-      const possibleId =
-        safeGetString(payload, "user_id") ||
-        possibleIdFromUser ||
-        safeGetString(payload, "sub") ||
-        safeGetString(payload, "id") ||
-        null;
-
-      if (possibleId) {
-        try {
-          return await this.request<{
-            id: string;
-            email: string;
-            name: string;
-            username: string;
-          }>(`/users/${possibleId}/`, { method: "GET" }, Boolean(token));
-        } catch {
-          // If that fails, we'll fall back below
-        }
+    const possibleIdFromUser = ((): string | null => {
+      const user = payload ? payload["user"] : null;
+      if (user && typeof user === "object") {
+        const id = (user as Record<string, unknown>)["id"];
+        return typeof id === "string" ? id : null;
       }
-    }
+      return null;
+    })();
 
-    // Fallback: call /users/me/ if backend exposes it. Return null on 4xx (unauthenticated/not found) to avoid redirect loops.
+    const possibleId =
+      safeGetString(payload, "user_id") ||
+      possibleIdFromUser ||
+      safeGetString(payload, "sub") ||
+      safeGetString(payload, "id") ||
+      null;
+
+    if (!possibleId) return null;
+
     try {
       return await this.request<{
         id: string;
         email: string;
         name: string;
         username: string;
-      }>("/users/me/", { method: "GET" }, Boolean(token));
-    } catch (err: unknown) {
-      if (err instanceof Error && /^4\d{2}\b/.test(err.message)) {
-        // Treat client errors (401/404) as unauthenticated / not found — return null and avoid navigating.
-        return null;
-      }
-      throw err;
+      }>(`/users/${possibleId}/`, { method: "GET" }, Boolean(token));
+    } catch {
+      // If fetching by id fails, treat as unauthenticated / not found
+      return null;
     }
   }
 
