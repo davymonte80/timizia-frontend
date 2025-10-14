@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bell, Search, Home, BookOpen, Briefcase, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -152,17 +158,35 @@ export default function DashboardPage() {
             <Briefcase className="w-6 h-6" />
             <span className="text-xs font-medium">Portfolio</span>
           </button>
-          <button
-            onClick={() => setActiveTab("profile")}
-            className={`flex flex-col items-center gap-1 px-4 py-2 ${
-              activeTab === "profile"
-                ? "text-blue-600 dark:text-blue-500"
-                : "text-gray-600 dark:text-gray-400"
-            }`}
-          >
-            <User className="w-6 h-6" />
-            <span className="text-xs font-medium">Profile</span>
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={`flex flex-col items-center gap-1 px-4 py-2 ${
+                  activeTab === "profile"
+                    ? "text-blue-600 dark:text-blue-500"
+                    : "text-gray-600 dark:text-gray-400"
+                }`}
+                onClick={() => setActiveTab("profile")}
+              >
+                <User className="w-6 h-6" />
+                <span className="text-xs font-medium">Profile</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+              <DropdownMenuItem
+                onClick={() => router.push("/profile/logout")}
+                className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+              >
+                Logout
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push("/profile/settings")}
+                className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+              >
+                Settings
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
     </div>
