@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { signupUser } from "@/lib/api";
+import { signupUser } from "@/lib/api/auth";
 
 const createAccountSchema = z
   .object({
@@ -63,9 +63,14 @@ export default function SignupPage() {
         email: data.email,
         password: data.password,
       });
-      router.push(`/auth/reset/verify?email=${encodeURIComponent(data.email)}`);
+      // Redirect to verify page
+      router.push(`/auth/verify?email=${encodeURIComponent(data.email)}`);
     } catch (e) {
-      setError("Signup failed. Please try again.");
+      if (e instanceof Error) {
+        setError(e.message || "Signup failed. Please try again.");
+      } else {
+        setError("Signup failed. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }

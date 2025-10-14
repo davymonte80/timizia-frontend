@@ -149,7 +149,8 @@ export default function CareerInterestPage() {
 
         {/* Subtitle */}
         <p className="mb-8 text-sm text-gray-600 sm:text-base dark:text-gray-400">
-          Let's personalize your journey so we can recommend the right projects
+          Let&apos;s personalize your journey so we can recommend the right
+          projects
         </p>
 
         {/* Career Interest Section */}

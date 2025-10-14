@@ -1,0 +1,212 @@
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://timizia.onrender.com/api";
+
+export interface APIError {
+  type: string;
+  errors: Array<{
+    attr: string | null;
+    code: string;
+    detail: string;
+  }>;
+}
+
+class APIClient {
+  private baseURL: string;
+
+  constructor(baseURL: string) {
+    this.baseURL = baseURL;
+  }
+
+  private getHeaders(authenticated: boolean = false): HeadersInit {
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    if (authenticated) {
+      const token = this.getAccessToken();
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+    }
+
+    return headers;
+  }
+
+  private getAccessToken(): string | null {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("access_token");
+  }
+
+  private getRefreshToken(): string | null {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("refresh_token");
+  }
+
+  private setTokens(access: string, refresh?: string) {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("access_token", access);
+    if (refresh) {
+      localStorage.setItem("refresh_token", refresh);
+    }
+  }
+
+  private clearTokens() {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+  }
+
+  async refreshAccessToken(): Promise<boolean> {
+    try {
+      const refreshToken = this.getRefreshToken();
+      if (!refreshToken) return false;
+
+      const response = await fetch(`${this.baseURL}/auth/token/refresh/`, {
+        method: "POST",
+        headers: this.getHeaders(false),
+        body: JSON.stringify({ refresh: refreshToken }),
+      });
+
+      if (!response.ok) return false;
+
+      const data = await response.json();
+      this.setTokens(data.access);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async request<T>(
+    endpoint: string,
+    options: RequestInit = {},
+    authenticated: boolean = false
+  ): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`;
+    const config: RequestInit = {
+      ...options,
+      headers: this.getHeaders(authenticated),
+    };
+
+    try {
+      let response = await fetch(url, config);
+
+      // If 401 and authenticated, try to refresh token
+      if (response.status === 401 && authenticated) {
+        const refreshed = await this.refreshAccessToken();
+        if (refreshed) {
+          // Retry with new token
+          config.headers = this.getHeaders(authenticated);
+          response = await fetch(url, config);
+        } else {
+          // Refresh failed, clear tokens and redirect to login
+          this.clearTokens();
+          if (typeof window !== "undefined") {
+            window.location.href = "/auth/login";
+          }
+          throw new Error("Session expired. Please login again.");
+        }
+      }
+
+      if (!response.ok) {
+        const error: APIError = await response.json();
+        const firstError = error.errors?.[0];
+        throw new Error(firstError?.detail || "An error occurred");
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Network error occurred");
+    }
+  }
+
+  // Auth methods
+  async register(data: { name: string; email: string; password: string }) {
+    const response = await this.request<{ name: string; email: string }>(
+      "/auth/register/",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    );
+    return response;
+  }
+
+  async login(email: string, password: string) {
+    const response = await this.request<{ access: string; refresh: string }>(
+      "/auth/token/",
+      {
+        method: "POST",
+        body: JSON.stringify({ username: email, password }),
+      }
+    );
+    this.setTokens(response.access, response.refresh);
+    return response;
+  }
+
+  async resetPassword(email: string, password: string) {
+    return this.request<{ email: string }>("/auth/reset_password/", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  async changePassword(
+    email: string,
+    currentPassword: string,
+    newPassword: string
+  ) {
+    return this.request<{ email: string }>(
+      "/auth/change_password/",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          current_password: currentPassword,
+          new_password: newPassword,
+        }),
+      },
+      true
+    );
+  }
+
+  logout() {
+    this.clearTokens();
+    if (typeof window !== "undefined") {
+      window.location.href = "/auth/login";
+    }
+  }
+
+  // User methods
+  async getCurrentUser() {
+    // Assuming you have a current user endpoint
+    return this.request<{
+      id: string;
+      email: string;
+      name: string;
+      username: string;
+    }>("/api/users/me/", { method: "GET" }, true);
+  }
+
+  async getUsers(page: number = 1) {
+    return this.request<{
+      count: number;
+      next: string | null;
+      previous: string | null;
+      results: Array<{ email: string; name: string; username: string }>;
+    }>(`/api/users/?page=${page}`, { method: "GET" }, true);
+  }
+
+  async getUserById(id: string) {
+    return this.request<{ email: string; name: string; username: string }>(
+      `/api/users/${id}/`,
+      { method: "GET" },
+      true
+    );
+  }
+}
+
+export const apiClient = new APIClient(API_BASE_URL);

@@ -1,13 +1,10 @@
 "use client";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "@/components/mode-toggle";
-const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
 //   title: "Timizia",
@@ -25,7 +22,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased`}>
         <Providers>
-          <div className="fixed z-50 top-4 right-4">
+                  <div className="fixed z-50 top-4 right-4">
             <ModeToggle />
           </div>
           <div className="flex flex-col min-h-screen">

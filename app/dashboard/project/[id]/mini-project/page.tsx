@@ -48,25 +48,30 @@ export default function MiniProjectPage() {
           Mini Project
         </h2>
         <p className="mb-8 text-sm text-gray-600 sm:text-base dark:text-gray-400">
-          Now it's time to apply what you've learned throughout Module 1.
+          Now it&apos;s time to apply what you&apos;ve learned throughout Module
+          1.
         </p>
 
         {/* Project Brief */}
         <div className="mb-8">
-          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">Project Brief</h3>
+          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">
+            Project Brief
+          </h3>
           <p className="mb-4 text-sm text-gray-600 sm:text-base dark:text-gray-400">
-            A local cafe wants to grow its online community and increase foot traffic through
-            social media
+            A local cafe wants to grow its online community and increase foot
+            traffic through social media
           </p>
           <p className="mb-4 text-sm text-gray-600 sm:text-base dark:text-gray-400">
-            As a Digital Marketer, your job is to create a 1-month social media content plan that's
-            clear, consistent, and engaging.
+            As a Digital Marketer, your job is to create a 1-month social media
+            content plan that&apos;s clear, consistent, and engaging.
           </p>
         </div>
 
         {/* Tasks */}
         <div className="mb-8">
-          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">Tasks</h3>
+          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">
+            Tasks
+          </h3>
           <ol className="space-y-3">
             {[
               "Define a clear campaign goal using the SMART framework.",
@@ -77,7 +82,9 @@ export default function MiniProjectPage() {
                 key={idx}
                 className="flex items-start gap-3 text-sm text-gray-600 sm:text-base dark:text-gray-400"
               >
-                <span className="font-bold text-gray-900 dark:text-white">{idx + 1}.</span>
+                <span className="font-bold text-gray-900 dark:text-white">
+                  {idx + 1}.
+                </span>
                 <span>{task}</span>
               </li>
             ))}
@@ -86,7 +93,9 @@ export default function MiniProjectPage() {
 
         {/* Deliverable */}
         <div className="mb-8">
-          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">Deliverable</h3>
+          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">
+            Deliverable
+          </h3>
           <p className="text-sm text-gray-600 sm:text-base dark:text-gray-400">
             Upload a single .docx or .pdf document titled
             Module1_CampaignStrategy_[YourName].docx
@@ -95,7 +104,9 @@ export default function MiniProjectPage() {
 
         {/* File Upload Section */}
         <div className="mb-8">
-          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">Submission</h3>
+          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">
+            Submission
+          </h3>
           <div className="p-8 text-center border-2 border-gray-300 border-dashed rounded-lg dark:border-gray-700">
             {uploadedFile ? (
               <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20">
@@ -121,31 +132,34 @@ export default function MiniProjectPage() {
               <label className="cursor-pointer">
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400 dark:text-gray-600" />
                 <p className="mb-2 text-sm text-gray-600 sm:text-base dark:text-gray-400">
-                  Upload your project document for review. You can submit a docx or pdf file.
+                  Upload your project document for review. You can submit a docx
+                  or pdf file.
                 </p>
                 <p className="text-xs font-medium text-blue-600 dark:text-blue-500">
                   Choose files
                 </p>
-                                                <input
-                                                  type="file"
-                                                  accept=".docx,.pdf"
-                                                  onChange={handleFileUpload}
-                                                  className="hidden"
-                                                />
-                                              </label>
-                                                        )}
-                      </div>
-                    </div>
-            
-                    {/* Submit Button */}
-                    <div className="flex justify-end">
-                      <Button
-                        onClick={handleSubmit}
-                        disabled={!uploadedFile}
-                        className="px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
-                      >
-                        Submit
-                      </Button>
-                    </div>
-                  </main>
-                </div>
+                <input
+                  type="file"
+                  accept=".docx,.pdf"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-end">
+          <Button
+            onClick={handleSubmit}
+            disabled={!uploadedFile}
+            className="px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+          >
+            Submit
+          </Button>
+        </div>
+      </main>
+    </div>
+  );
+}

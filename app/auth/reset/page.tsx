@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 const resetSchema = z.object({
@@ -22,6 +23,7 @@ const resetSchema = z.object({
 
 export default function ResetPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof resetSchema>>({
     resolver: zodResolver(resetSchema),
@@ -34,9 +36,7 @@ export default function ResetPage() {
 
     // simulate API delay before redirect
     setTimeout(() => {
-      window.location.href = `/auth/reset/verify?email=${encodeURIComponent(
-        data.email
-      )}`;
+      router.push(`/auth/reset/verify?email=${encodeURIComponent(data.email)}`);
     }, 1500);
   };
 

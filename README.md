@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Timizia Frontend
+
+Timizia is a modern web application for career onboarding, project-based learning, and portfolio building. This repository contains the frontend codebase built with Next.js, React, and TypeScript.
+
+## Features
+
+- User authentication (signup, login, password reset, email verification)
+- Onboarding flow for career interests and goals
+- Dashboard with personalized project suggestions
+- Project modules and mini-projects with file upload
+- Light, dark, and system theme support
+- Responsive and accessible UI
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org/) (App Router)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Lucide Icons](https://lucide.dev/)
+- [Zod](https://zod.dev/) for schema validation
+- [React Hook Form](https://react-hook-form.com/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js (v18+ recommended)
+- pnpm (or npm/yarn)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Installation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/davymonte80/timizia-frontend.git
+   cd timizia-frontend
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Install dependencies:**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   # or
+   yarn install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Set up environment variables:**
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_API_URL=https://XXXXXXXX/api
+   ```
 
-## Learn More
+4. **Run the development server:**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+5. **Open the app:**
+   Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `app/` — Next.js app directory (pages, routes, and UI flows)
+- `components/` — Reusable UI components
+- `hooks/` — Custom React hooks (e.g., authentication)
+- `lib/` — API clients and utility functions
+- `public/` — Static assets
+- `styles/` — Global styles (if any)
 
-## Deploy on Vercel
+## API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The frontend communicates with the Timizia backend API. The base URL is set via the `NEXT_PUBLIC_API_URL` environment variable .
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Theming
+
+- Light, dark, and system theme modes are supported.
+- Use the theme toggle button (top right) to switch modes.
+
+
+
+## License
+
+[MIT](LICENSE)
+
+---
+
+For questions or support, please open an issue or contact the maintainer.

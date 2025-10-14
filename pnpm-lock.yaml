@@ -51,7 +51,7 @@ importers:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       lucide-react:
-        specifier: '@hookform/resolvers/zod'
+        specifier: link:@hookform/resolvers/zod
         version: link:@hookform/resolvers/zod
       next:
         specifier: 15.5.4
