@@ -182,13 +182,13 @@ class APIClient {
 
   // User methods
   async getCurrentUser() {
-    // Assuming you have a current user endpoint
+    // Corrected endpoint to avoid duplicate `/api/api/`
     return this.request<{
       id: string;
       email: string;
       name: string;
       username: string;
-    }>("/api/users/me/", { method: "GET" }, true);
+    }>("/users/me/", { method: "GET" }, true);
   }
 
   async getUsers(page: number = 1) {
