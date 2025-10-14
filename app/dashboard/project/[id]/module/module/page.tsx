@@ -153,9 +153,6 @@ export default function LessonPage() {
             <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm">
               <div className="w-0 h-0 ml-1 border-t-8 border-b-8 border-t-transparent border-l-12 border-l-white border-b-transparent"></div>
             </div>
-            <p className="text-sm font-medium sm:text-base">
-              Video content will appear here
-            </p>
           </div>
         </div>
 

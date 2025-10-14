@@ -64,7 +64,7 @@ export default function SignupPage() {
         password: data.password,
       });
       // Redirect to verify page
-      router.push(`/auth/verify?email=${encodeURIComponent(data.email)}`);
+      router.push(`/auth/reset/verify?email=${encodeURIComponent(data.email)}`);
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message || "Signup failed. Please try again.");

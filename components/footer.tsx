@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Github, Twitter, Linkedin } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function Footer() {
+  const router = useRouter();
+
   return (
     <footer className="py-8 mt-auto text-gray-900 bg-neutral-light dark:bg-black dark:text-gray-100">
       <div className="container px-4 mx-auto">
@@ -39,32 +42,46 @@ export function Footer() {
             >
               Terms
             </Link>
+            <Link
+              href="/profile/logout"
+              className="text-neutral dark:text-neutral-light hover:text-primary"
+            >
+              Profile
+            </Link>
           </div>
-          <div className="flex space-x-4">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
+          <div className="flex flex-col items-center space-y-4 md:space-y-0 md:items-end">
+            <div className="flex space-x-4">
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                <Github className="w-6 h-6 text-neutral dark:text-neutral-light hover:text-primary" />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+              >
+                <Twitter className="w-6 h-6 text-neutral dark:text-neutral-light hover:text-primary" />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-6 h-6 text-neutral dark:text-neutral-light hover:text-primary" />
+              </a>
+            </div>
+            <button
+              onClick={() => router.push("/profile/logout")}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
             >
-              <Github className="w-6 h-6 text-neutral dark:text-neutral-light hover:text-primary" />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-            >
-              <Twitter className="w-6 h-6 text-neutral dark:text-neutral-light hover:text-primary" />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="w-6 h-6 text-neutral dark:text-neutral-light hover:text-primary" />
-            </a>
+              Logout
+            </button>
           </div>
         </div>
         <div className="mt-6 text-sm text-center text-neutral dark:text-neutral-light">

@@ -150,7 +150,7 @@ export default function ProjectBlueprintPage() {
         {/* Start Project Button */}
         <Button
           onClick={() =>
-            router.push(`/dashboard/project/${params.id}/module/1`)
+            router.push(`/dashboard/project/${params.id}/module/module`)
           }
           className="w-full h-12 text-base font-medium text-white transition-all duration-200 bg-blue-600 rounded-lg shadow-lg sm:h-13 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 sm:text-lg hover:shadow-xl"
         >
