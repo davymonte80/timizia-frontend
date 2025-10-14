@@ -1,22 +1,22 @@
 import tailwindcssAnimate from "tailwindcss-animate";
 
 const config = {
-  darkMode: ["class"], // Enables dark mode via class
+  darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx,js,jsx}",
+    "./pages/**/*.{ts,tsx,js,jsx}",
+    "./components/**/*.{ts,tsx,js,jsx}",
+    "./src/**/*.{ts,tsx,js,jsx}",
   ],
   theme: {
     extend: {
       colors: {
-        primary: "#1D4ED8", // Blue
-        secondary: "#10B981", // Green
-        accent: "#F59E0B", // Yellow
-        neutral: "#111827", // Dark text
-        "neutral-light": "#F3F4F6", // Light bg
-        error: "#EF4444", // Red
+        primary: "#1D4ED8",
+        secondary: "#10B981",
+        accent: "#F59E0B",
+        neutral: "#111827",
+        "neutral-light": "#F3F4F6",
+        error: "#EF4444",
       },
       animation: {
         "spin-slow": "spin 8s linear infinite",

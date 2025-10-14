@@ -14,7 +14,8 @@ class APIClient {
   private baseURL: string;
 
   constructor(baseURL: string) {
-    this.baseURL = baseURL;
+    // Normalize baseURL: remove trailing slashes
+    this.baseURL = baseURL.replace(/\/+$|\s+$/g, "").replace(/\s+/g, "");
   }
 
   private getHeaders(authenticated: boolean = false): HeadersInit {
@@ -82,7 +83,11 @@ class APIClient {
     options: RequestInit = {},
     authenticated: boolean = false
   ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
+    // Ensure endpoint starts with a single '/'
+    const normalizedEndpoint = endpoint.startsWith("/")
+      ? endpoint
+      : `/${endpoint}`;
+    const url = `${this.baseURL}${normalizedEndpoint}`;
     const config: RequestInit = {
       ...options,
       headers: this.getHeaders(authenticated),
@@ -104,22 +109,54 @@ class APIClient {
           if (typeof window !== "undefined") {
             window.location.href = "/auth/login";
           }
-          throw new Error("Session expired. Please login again.");
+          throw new Error("401 Session expired. Please login again.");
         }
       }
 
       if (!response.ok) {
-        const error: APIError = await response.json();
-        const firstError = error.errors?.[0];
-        throw new Error(firstError?.detail || "An error occurred");
+        // Try to parse structured error, but include status for callers
+        const parsed = await response.json().catch(() => null);
+        const firstError = parsed?.errors?.[0];
+        const message =
+          firstError?.detail || response.statusText || "An error occurred";
+        throw new Error(`${response.status} ${message}`);
       }
 
-      return response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
+      return (await response.json()) as T;
+    } catch (err: unknown) {
+      // Re-throw so callers can handle errors
+      throw err;
+    }
+  }
+
+  // Try to decode a JWT access token payload (no verification) to extract common user id claims
+  private decodeJwtPayload(token: string): Record<string, unknown> | null {
+    try {
+      const parts = token.split(".");
+      if (parts.length < 2) return null;
+      const payload = parts[1];
+      let json: string;
+      if (typeof window !== "undefined" && typeof atob === "function") {
+        json = decodeURIComponent(
+          Array.prototype.map
+            .call(
+              atob(payload.replace(/-/g, "+").replace(/_/g, "/")),
+              function (c: string) {
+                return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+              }
+            )
+            .join("")
+        );
+      } else {
+        // Node environment
+        json = Buffer.from(
+          payload.replace(/-/g, "+").replace(/_/g, "/"),
+          "base64"
+        ).toString("utf8");
       }
-      throw new Error("Network error occurred");
+      return JSON.parse(json);
+    } catch {
+      return null;
     }
   }
 
@@ -182,13 +219,67 @@ class APIClient {
 
   // User methods
   async getCurrentUser() {
-    // Corrected endpoint to avoid duplicate `/api/api/`
-    return this.request<{
-      id: string;
-      email: string;
-      name: string;
-      username: string;
-    }>("/users/me/", { method: "GET" }, true);
+    // First, attempt to decode user id from access token and call /users/{id}/ if possible
+    const token = this.getAccessToken();
+    if (token) {
+      const payload = this.decodeJwtPayload(token) as Record<
+        string,
+        unknown
+      > | null;
+
+      const safeGetString = (
+        obj: Record<string, unknown> | null,
+        key: string
+      ): string | null => {
+        if (!obj) return null;
+        const v = obj[key];
+        return typeof v === "string" ? v : null;
+      };
+
+      const possibleIdFromUser = ((): string | null => {
+        const user = payload ? payload["user"] : null;
+        if (user && typeof user === "object") {
+          const id = (user as Record<string, unknown>)["id"];
+          return typeof id === "string" ? id : null;
+        }
+        return null;
+      })();
+
+      const possibleId =
+        safeGetString(payload, "user_id") ||
+        possibleIdFromUser ||
+        safeGetString(payload, "sub") ||
+        safeGetString(payload, "id") ||
+        null;
+
+      if (possibleId) {
+        try {
+          return await this.request<{
+            id: string;
+            email: string;
+            name: string;
+            username: string;
+          }>(`/users/${possibleId}/`, { method: "GET" }, true);
+        } catch {
+          // If that fails, we'll fall back below
+        }
+      }
+    }
+
+    // Fallback: call /users/me/ if backend exposes it. Return null on 404.
+    try {
+      return await this.request<{
+        id: string;
+        email: string;
+        name: string;
+        username: string;
+      }>("/users/me/", { method: "GET" }, true);
+    } catch (err: unknown) {
+      if (err instanceof Error && /^404\b/.test(err.message)) {
+        return null;
+      }
+      throw err;
+    }
   }
 
   async getUsers(page: number = 1) {
@@ -197,12 +288,12 @@ class APIClient {
       next: string | null;
       previous: string | null;
       results: Array<{ email: string; name: string; username: string }>;
-    }>(`/api/users/?page=${page}`, { method: "GET" }, true);
+    }>(`/users/?page=${page}`, { method: "GET" }, true);
   }
 
   async getUserById(id: string) {
     return this.request<{ email: string; name: string; username: string }>(
-      `/api/users/${id}/`,
+      `/users/${id}/`,
       { method: "GET" },
       true
     );
