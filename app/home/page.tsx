@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "@/components/auth-provider";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -11,8 +11,13 @@ export default function HomePage() {
   const { isLoggedIn } = useContext(AuthContext);
   const router = useRouter();
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/onboarding");
+    }
+  }, [isLoggedIn, router]);
+
   if (!isLoggedIn) {
-    router.push("/onboarding");
     return null;
   }
 
